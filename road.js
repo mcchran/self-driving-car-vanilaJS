@@ -13,6 +13,15 @@ class Road{
         // to the screen
         this.top=-infinity;
         this.bottom=infinity;
+
+        const topLeft = {x: this.left, y:this.top}
+        const topRight = {x: this.right, y: this.top}
+        const bottomLeft = {x: this.left, y: this.bottom}
+        const bottomRight = {x: this.right, y:this.bottom}
+        this.borders = [
+            [topLeft, bottomLeft],
+            [topRight, bottomRight]
+        ]
     }
 
     // getLaneCenter returns the center of the laneIndex lane
@@ -26,25 +35,26 @@ class Road{
         ctx.lineWidth=5;
         ctx.strokeStye="white";
         
-        for(let i=0;i<=this.laneCount;i++){
+        // just plot the internals ... 
+        for(let i=1;i<=this.laneCount-1;i++){
             const x = lerp(
                 this.left,
                 this.right,
                 i/this.laneCount
             )
-            // so what we need here is the intermediate lanes to be
-            // formatted into a dashed fashion
-            if (i>0 && i<this.laneCount){
-                ctx.setLineDash([20, 20]);
-            }else{ 
-                // no dashes 
-                ctx.setLineDash([]);
-            }
-            // let's plot the left line
+            ctx.setLineDash([20, 20]);
             ctx.beginPath();
             ctx.moveTo(x,this.top);
             ctx.lineTo(x,this.bottom);
             ctx.stroke();
         }
+        // let's plot the borders then
+        ctx.setLineDash([])
+        this.borders.forEach(border=>{
+            ctx.beginPath();
+            ctx.moveTo(border[0].x, border[0].y);
+            ctx.lineTo(border[1].x, border[1].y);
+            ctx.stroke();
+        })
     }
 }
