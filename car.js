@@ -11,7 +11,7 @@ class Car{
         // because car in not able to be controlled
         this.maxSpeed=3;
         this.friction=0.05;
- 
+        this.sensor=new Sensor(this);
         this.controls=new Controls();
     }
 
@@ -37,10 +37,12 @@ class Car{
         // after drawing this one let's restore to the previous state
         // no context translation or rotation anymore
         ctx.restore();
+        this.sensor.draw(ctx);
     }
 
-    update(){
+    update(roadBorders){
         this.#move()
+        this.sensor.update(roadBorders)
     }
 
     #move(){
