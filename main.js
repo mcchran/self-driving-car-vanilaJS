@@ -11,7 +11,8 @@ car.draw(ctx);
 
 // let's add a couple of cars here ... 
 traffic = [
-    new Car(road.getLaneCenter(0), 50, 30, 70, "DUMMY", maxSpeed=2)
+    new Car(road.getLaneCenter(0), 50, 30, 70, "DUMMY", maxSpeed=2),
+    new Car(road.getLaneCenter(1), 30, 30, 70, "DUMMY", maxSpeed=2)
 ]
 
 animate();

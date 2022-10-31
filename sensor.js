@@ -1,7 +1,7 @@
 class Sensor{
     constructor(car){
         this.car = car;
-        this.rayCount=1;
+        this.rayCount=5;
         this.rayLength=200;  // the maximum distance the sensor can reach to
         this.raySpread=Math.PI/2; // 45 degrees is the first and the last ray 
 
