@@ -11,38 +11,57 @@ class Car{
         // because car in not able to be controlled
         this.maxSpeed=3;
         this.friction=0.05;
+        this.polygon=this.#createPolygon()
         this.sensor=new Sensor(this);
         this.controls=new Controls();
     }
 
     draw(ctx){
-        ctx.save();
-        // so instead of drawing the rectangle to the 
-        // original coordinates we do just update the 
-        //overall coordinate system to
-        // start from x, y -- the care coords
-        ctx.translate(this.x, this.y)
-        // to be rotated by the car angle
-        ctx.rotate(-this.angle);
         ctx.beginPath();
-        ctx.rect(
-            // so we should drawing the car "outside"
-            // the newly translated coord system 
-            -this.width/2,
-            -this.height/2,
-            this.width,
-            this.height
-        );
-        ctx.fill();
-        // after drawing this one let's restore to the previous state
-        // no context translation or rotation anymore
-        ctx.restore();
+        // now we draw the polygon instead of a static rectangular
+        // previously we used to plot a static rectangular and translate
+        // the road ... 
+        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+        for (let i=1; i < this.polygon.length; i++){
+            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+        }
+        ctx.fill()
         this.sensor.draw(ctx);
     }
 
     update(roadBorders){
         this.#move()
+        this.polygon = this.#createPolygon()
         this.sensor.update(roadBorders)
+    }
+
+    // determines the exact position of the four corners of the
+    // car. We need that method to get the four corners relatively
+    // to the center of the car and the rotation angle. This is 
+    // because we are not aware of what is the rotation angle every time,
+    // since we do update, store and restore context... but even we did not
+    // do something like that, this is the way to go.
+    #createPolygon(){
+        const points = [];
+        const rad = Math.hypot(this.width, this.height)/2;
+        const alpha=Math.atan2(this.width, this.height);
+        points.push({
+            x: this.x-Math.sin(this.angle-alpha)*rad,
+            y: this.y-Math.cos(this.angle-alpha)*rad
+        });
+        points.push({
+            x: this.x-Math.sin(this.angle+alpha)*rad,
+            y: this.y-Math.cos(this.angle+alpha)*rad
+        });
+        points.push({
+            x: this.x-Math.sin(Math.PI+this.angle-alpha)*rad,
+            y: this.y-Math.cos(Math.PI+this.angle-alpha)*rad
+        });
+        points.push({
+            x: this.x-Math.sin(Math.PI+this.angle+alpha)*rad,
+            y: this.y-Math.cos(Math.PI+this.angle+alpha)*rad
+        });
+        return points;
     }
 
     #move(){
