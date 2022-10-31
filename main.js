@@ -18,9 +18,9 @@ animate();
 
 function animate(){
     for (let i=0; i<traffic.length; i++){
-        traffic[i].update(road.borders)
+        traffic[i].update(road.borders, [])
     }
-    car.update(road.borders );
+    car.update(road.borders, traffic);
     // should update canvas on any frame update
     canvas.height = window.innerHeight;
 
@@ -29,10 +29,10 @@ function animate(){
     road.draw(ctx);
     // should draw all traffic asw well
     for (let i=0; i<traffic.length; i++){
-        traffic[i].draw(ctx);
+        traffic[i].draw(ctx, "red");
     }
 
-    car.draw(ctx);
+    car.draw(ctx, "blue");
 
     ctx.restore()
     requestAnimationFrame(animate)

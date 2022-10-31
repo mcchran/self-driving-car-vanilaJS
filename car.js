@@ -24,7 +24,7 @@ class Car{
         this.damaged = false;
     }
 
-    draw(ctx){
+    draw(ctx, color){
         ctx.beginPath();
         // now we draw the polygon instead of a static rectangular
         // previously we used to plot a static rectangular and translate
@@ -37,27 +37,34 @@ class Car{
         if (this.damaged){
             ctx.fillStyle="gray"
         }else{
-            ctx.fillStyle="black"
+            ctx.fillStyle=color
         }
         ctx.fill()
         this.sensor.draw(ctx);
     }
 
-    update(roadBorders){
+    update(roadBorders, traffic){
         if (!this.damaged){
             this.#move()
             this.polygon = this.#createPolygon()
-            this.damaged = this.#assessDamage(roadBorders);
+            this.damaged = this.#assessDamage(roadBorders, traffic);
         }
-        this.sensor.update(roadBorders)
+        this.sensor.update(roadBorders, traffic)
     }
 
-    #assessDamage(roadBoarders){
+    #assessDamage(roadBoarders, traffic){
         for (let i=0; i<roadBoarders.length; i++){
             if (polysIntersect(this.polygon, roadBoarders[i])){
                 return true;
+        }
+        }
+
+        for (let i=0; i<traffic.length; i++){
+            if (polysIntersect(this.polygon, traffic[i].polygon)){
+                return true;
             }
         }
+
         return false;
     }
 
