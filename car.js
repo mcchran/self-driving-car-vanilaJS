@@ -15,8 +15,7 @@ class Car{
         this.polygon=this.#createPolygon()
         if (controlType!="DUMMY"){
             this.sensor= new Sensor(this);
-        }else{
-            this.sensor= new DummySensor(this)
+            this.brain = new NeuralNetwork([[this.sensor.rayCount], 6, 4])
         }
         this.controls=new Controls(controlType);
 
@@ -40,7 +39,9 @@ class Car{
             ctx.fillStyle=color
         }
         ctx.fill()
-        this.sensor.draw(ctx);
+        if (this.sensor){
+            this.sensor.draw(ctx);
+        }
     }
 
     update(roadBorders, traffic){
@@ -49,7 +50,21 @@ class Car{
             this.polygon = this.#createPolygon()
             this.damaged = this.#assessDamage(roadBorders, traffic);
         }
-        this.sensor.update(roadBorders, traffic)
+        if (this.sensor){
+            this.sensor.update(roadBorders, traffic)
+            const offsets=[]
+            // TODO: this one should work as an one-liner but when it returns undefined ... 
+            for (let i; i < this.sensor.readings; i++){
+                if (this.sensor.readings[i] !== "undefined" || this.height.readings){
+                    offsets.push(1-this.sensor.readings[i])
+                }else{
+                    offsets.push(0)
+                }
+            }
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain)
+            console.log(outputs)
+        }
+        
     }
 
     #assessDamage(roadBoarders, traffic){
