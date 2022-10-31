@@ -24,10 +24,20 @@ function getIntersection(A,B,C,D){
     return null
 }
 
-// some tests are following ... 
-function getIntersection_tests(){
-    A = {x: 100, y:-1}
-    B = {x: 70, y:10}
-    C = {x: 100, y:-100}
-    D = {x:100, y:100}
+// returns true in case of any intersection
+function polysIntersect(poly1, poly2){
+    for (let i=0; i<poly1.length; i++){
+        for (let j=0; j<poly2.length; j++){
+            const touch = getIntersection(
+                poly1[i],
+                poly1[(i+1)%poly1.length],
+                poly2[j],
+                poly2[(j+1)%poly2.length]
+            )
+            if (touch){
+                return true;
+            }
+        }
+    }
+    return false
 }

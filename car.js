@@ -11,9 +11,13 @@ class Car{
         // because car in not able to be controlled
         this.maxSpeed=3;
         this.friction=0.05;
+        // this gonna generate the mess of points to represent the car
         this.polygon=this.#createPolygon()
         this.sensor=new Sensor(this);
         this.controls=new Controls();
+
+        // stores the state of car -- damaged or not
+        this.damaged = false;
     }
 
     draw(ctx){
@@ -25,14 +29,32 @@ class Car{
         for (let i=1; i < this.polygon.length; i++){
             ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
         }
+        // check if the car is damaged to update the fill style
+        if (this.damaged){
+            ctx.fillStyle="gray"
+        }else{
+            ctx.fillStyle="black"
+        }
         ctx.fill()
         this.sensor.draw(ctx);
     }
 
     update(roadBorders){
-        this.#move()
-        this.polygon = this.#createPolygon()
+        if (!this.damaged){
+            this.#move()
+            this.polygon = this.#createPolygon()
+            this.damaged = this.#assessDamage(roadBorders);
+        }
         this.sensor.update(roadBorders)
+    }
+
+    #assessDamage(roadBoarders){
+        for (let i=0; i<roadBoarders.length; i++){
+            if (polysIntersect(this.polygon, roadBoarders[i])){
+                return true;
+            }
+        }
+        return false;
     }
 
     // determines the exact position of the four corners of the
