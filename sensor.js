@@ -94,3 +94,9 @@ class Sensor{
         }
     }
 }
+
+class DummySensor{
+    constructor(){}
+    update(){}
+    draw(){}
+}

@@ -1,5 +1,5 @@
 class Car{
-    constructor(x, y, width, height){
+    constructor(x, y, width, height, controlType, maxSpeed=3){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -9,12 +9,16 @@ class Car{
         this.acceleration=0.2;
         // we need to add some friction
         // because car in not able to be controlled
-        this.maxSpeed=3;
+        this.maxSpeed=maxSpeed;
         this.friction=0.05;
         // this gonna generate the mess of points to represent the car
         this.polygon=this.#createPolygon()
-        this.sensor=new Sensor(this);
-        this.controls=new Controls();
+        if (controlType!="DUMMY"){
+            this.sensor= new Sensor(this);
+        }else{
+            this.sensor= new DummySensor(this)
+        }
+        this.controls=new Controls(controlType);
 
         // stores the state of car -- damaged or not
         this.damaged = false;
