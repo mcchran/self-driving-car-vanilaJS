@@ -6,7 +6,7 @@ const carCtx = carCanvas.getContext("2d");
 const networkCanvas = document.getElementById("networkCanvas")
 // we need canvas to mimic a road, like a lane
 networkCanvas.width = 300;
-const networkContext = networkCanvas.getContext("2d");
+const networkCtx = networkCanvas.getContext("2d");
 
 // let's create our road
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
@@ -22,7 +22,7 @@ traffic = [
 
 animate();
 
-function animate(){
+function animate(time){
     for (let i=0; i<traffic.length; i++){
         traffic[i].update(road.borders, [])
     }
@@ -42,6 +42,8 @@ function animate(){
     car.draw(carCtx, "blue");
 
     carCtx.restore()
-    
-    requestAnimationFrame(animate)
+    networkCtx.lineDashOffset=-time/50;
+    Visualizer.drawNetwork(networkCtx, car.brain);
+    // this is going to call animate with time optional param
+    requestAnimationFrame(animate) 
 }
