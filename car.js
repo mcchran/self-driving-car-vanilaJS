@@ -27,7 +27,7 @@ class Car{
         this.damaged = false;
     }
 
-    draw(ctx, color){
+    draw(ctx, color, withSensors=false){
         ctx.beginPath();
         // now we draw the polygon instead of a static rectangular
         // previously we used to plot a static rectangular and translate
@@ -43,7 +43,7 @@ class Car{
             ctx.fillStyle=color
         }
         ctx.fill()
-        if (this.sensor){
+        if (this.sensor && withSensors){
             this.sensor.draw(ctx);
         }
     }
