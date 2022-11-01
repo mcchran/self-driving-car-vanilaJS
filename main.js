@@ -11,14 +11,21 @@ const networkCtx = networkCanvas.getContext("2d");
 // let's create our road
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 // car is just a square to plot in the screen
-const N = 100
+const N = 1000
 const cars = generateCars(N);
 let bestCar=cars[0]; // the car performed the best to the experiment of N cars
 // load the bestBrain from local storage if it exists
 if (localStorage.getItem("bestBrain")){
-    bestCar.brain=JSON.parse(
-        localStorage.getItem("bestBrain")
-    )
+    // let's load the bestBrain model to each single care 
+    // to get some evolution!
+    for (let i=0; i<cars.length; i++){
+        cars[i].brain=JSON.parse(
+            localStorage.getItem("bestBrain")
+        )
+        if (i!=0){
+            NeuralNetwork.mutate(cars[i].brain, 0.15)
+        }
+    }
 }
 
 // let's add a couple of cars here ... 
