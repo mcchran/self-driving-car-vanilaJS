@@ -11,7 +11,8 @@ const networkCtx = networkCanvas.getContext("2d");
 // let's create our road
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 // car is just a square to plot in the screen
-const N = 1000
+// FIXME: should train for 500s and then reduce to 1 to load the model!
+const N = 500
 const cars = generateCars(N);
 let bestCar=cars[0]; // the car performed the best to the experiment of N cars
 // load the bestBrain from local storage if it exists
@@ -31,9 +32,9 @@ if (localStorage.getItem("bestBrain")){
 // let's add a couple of cars here ... 
 traffic = [
     // new Car(road.getLaneCenter(0), 50, 30, 70, "DUMMY", maxSpeed=2),
-    new Car(road.getLaneCenter(1), -100, 30, 70, "DUMMY", maxSpeed=2),
-    new Car(road.getLaneCenter(0), -300, 30, 70, "DUMMY", maxSpeed=2),
-    new Car(road.getLaneCenter(2), -300, 30, 70, "DUMMY", maxSpeed=2)
+    new Car(road.getLaneCenter(1), -100, 30, 45, "DUMMY", maxSpeed=2),
+    new Car(road.getLaneCenter(0), -300, 30, 45, "DUMMY", maxSpeed=2),
+    new Car(road.getLaneCenter(2), -300, 30, 45, "DUMMY", maxSpeed=2)
 ]
 
 animate();
@@ -52,7 +53,7 @@ function discard(){
 function generateCars(N){
     const cars=[]
     for (let i=0; i<N; i++){
-        cars.push(new Car(road.getLaneCenter(1), 100, 30, 60, "AI", maxSpeed=3))
+        cars.push(new Car(road.getLaneCenter(1), 100, 30, 45, "AI", maxSpeed=3))
     }
     return cars;
 }

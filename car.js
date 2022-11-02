@@ -19,7 +19,8 @@ class Car{
 
         if (controlType!="DUMMY"){
             this.sensor= new Sensor(this);
-            this.brain = new NeuralNetwork([[this.sensor.rayCount], 6, 4])
+            this.brain = new NeuralNetwork(
+                [[this.sensor.rayCount], 6, 4])
         }
         this.controls=new Controls(controlType);
 
@@ -57,10 +58,10 @@ class Car{
         if (this.sensor){
             this.sensor.update(roadBorders, traffic)
             const offsets=[]
-            // TODO: this one should work as an one-liner but when it returns undefined ... 
-            for (let i; i < this.sensor.readings; i++){
-                if (this.sensor.readings[i] !== "undefined" || this.height.readings){
-                    offsets.push(1-this.sensor.readings[i])
+            // HERE: we got the bug ... the sensor reading do not behave
+            for (let i=0; i < this.sensor.readings.length; i++){
+                if (this.sensor.readings[i] !== undefined){
+                    offsets.push(1-this.sensor.readings[i].offset)
                 }else{
                     offsets.push(0)
                 }
@@ -152,10 +153,10 @@ class Car{
         if (this.speed!=0){
             const flip=this.speed<0?1:-1;
             if (this.controls.left){
-                this.angle+=0.03*flip;
+                this.angle+=0.02*flip;
             }
             if (this.controls.right){
-                this.angle-=0.03*flip;
+                this.angle-=0.02*flip;
             }
         }
 
